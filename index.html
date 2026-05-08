@@ -52,6 +52,7 @@ h1 {
     text-align: center;
     word-break: break-word;
     max-width: 100%;
+    cursor: pointer;
 
     background: linear-gradient(
         45deg,
@@ -71,6 +72,10 @@ h1 {
         fadeInText 3s ease forwards;
 
     text-shadow: 0 0 25px rgba(255,255,255,0.4);
+}
+
+h1:hover {
+    transform: scale(1.05);
 }
 
 @keyframes gradientMove {
@@ -112,15 +117,60 @@ h1 {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
 }
 
+/* ===== Fullscreen контейнер ===== */
+.fullscreen-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background: #000;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen-container.active {
+    display: flex;
+}
+
+.fullscreen-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.fullscreen-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1001;
+}
+
+.fullscreen-close:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
 /* ===== Кнопка музыки ===== */
 .controls {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 100;
+    display: flex;
+    gap: 10px;
 }
 
-.music-button {
+.music-button,
+.fullscreen-button {
     background: #ffffff;
     color: #000000;
     border: none;
@@ -133,7 +183,8 @@ h1 {
     box-shadow: 0 8px 25px rgba(0,0,0,0.35);
 }
 
-.music-button:hover {
+.music-button:hover,
+.fullscreen-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 35px rgba(0,0,0,0.5);
 }
@@ -153,6 +204,19 @@ h1 {
         height: 50dvh;
         padding: 10px;
     }
+
+    .controls {
+        bottom: 15px;
+        right: 15px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .music-button,
+    .fullscreen-button {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
 }
 </style>
 </head>
@@ -165,18 +229,24 @@ h1 {
 </div>
 
 <div class="feed">
-    <img src="IMG_0146.jpeg">
-    <img src="IMG_0148.jpeg">
-    <img src="IMG_0149.jpeg">
-    <img src="IMG_0150.jpeg">
-    <img src="IMG_0151.jpeg">
-    <img src="IMG_0152.jpeg">
-    <img src="IMG_0153.jpeg">
-    <img src="IMG_0154.jpeg">
+    <img src="IMG_0146.jpeg" alt="Изображение 1">
+    <img src="IMG_0148.jpeg" alt="Изображение 2">
+    <img src="IMG_0149.jpeg" alt="Изображение 3">
+    <img src="IMG_0150.jpeg" alt="Изображение 4">
+    <img src="IMG_0151.jpeg" alt="Изображение 5">
+    <img src="IMG_0152.jpeg" alt="Изображение 6">
+    <img src="IMG_0153.jpeg" alt="Изображение 7">
+    <img src="IMG_0154.jpeg" alt="Изображение 8">
+</div>
+
+<div class="fullscreen-container" id="fullscreenContainer">
+    <button class="fullscreen-close" id="closeFullscreen">&times;</button>
+    <img id="fullscreenImage" src="" alt="">
 </div>
 
 <div class="controls">
     <button class="music-button" id="musicBtn">🎵 Включить музыку</button>
+    <button class="fullscreen-button" id="fullscreenBtn">⛶ Полный экран</button>
 </div>
 
 <audio id="bgMusic" loop>
@@ -188,6 +258,11 @@ const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
 const music = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+const fullscreenContainer = document.getElementById("fullscreenContainer");
+const fullscreenImage = document.getElementById("fullscreenImage");
+const closeFullscreenBtn = document.getElementById("closeFullscreen");
+const feedImages = document.querySelectorAll(".feed img");
 
 let isPlaying = false;
 
@@ -257,6 +332,7 @@ window.addEventListener("mousemove", (e) => {
     mouseY = (e.clientY - window.innerHeight / 2) / 50;
 });
 
+// Музыка
 musicBtn.addEventListener("click", () => {
     if (isPlaying) {
         music.pause();
@@ -272,6 +348,54 @@ musicBtn.addEventListener("click", () => {
         }).catch(err => {
             console.log("Ошибка воспроизведения:", err);
         });
+    }
+});
+
+// Фуллскрин по клику на заголовок
+document.querySelector("h1").addEventListener("click", () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log("Ошибка фуллскрина:", err);
+        });
+    }
+});
+
+// Фуллскрин для галереи
+fullscreenBtn.addEventListener("click", () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log("Ошибка фуллскрина:", err);
+        });
+    }
+});
+
+// Открыть изображение в фуллскрин
+feedImages.forEach((img, index) => {
+    img.addEventListener("click", () => {
+        fullscreenImage.src = img.src;
+        fullscreenContainer.classList.add("active");
+    });
+});
+
+// Закрыть фуллскрин изображения
+closeFullscreenBtn.addEventListener("click", () => {
+    fullscreenContainer.classList.remove("active");
+});
+
+fullscreenContainer.addEventListener("click", (e) => {
+    if (e.target === fullscreenContainer) {
+        fullscreenContainer.classList.remove("active");
+    }
+});
+
+// Закрыть по ESC
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        fullscreenContainer.classList.remove("active");
     }
 });
 </script>
