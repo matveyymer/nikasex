@@ -189,11 +189,10 @@ h1:hover {
     gap: 10px;
 }
 
-.music-button,
-.fullscreen-button {
-    background: rgba(255, 255, 255, 0.1);
+.music-button {
+    background: rgba(0, 0, 0, 0.3);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     padding: 14px 22px;
     border-radius: 20px;
     cursor: pointer;
@@ -205,12 +204,12 @@ h1:hover {
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.music-button:hover,
-.fullscreen-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+.music-button:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
     box-shadow: 
         0 12px 40px rgba(0, 0, 0, 0.4),
@@ -218,16 +217,16 @@ h1:hover {
 }
 
 .music-button.playing {
-    background: rgba(100, 200, 255, 0.2);
-    border: 1px solid rgba(100, 200, 255, 0.4);
+    background: rgba(100, 200, 255, 0.25);
+    border: 1px solid rgba(100, 200, 255, 0.5);
     box-shadow: 
         0 8px 32px rgba(100, 200, 255, 0.2),
         inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .music-button.playing:hover {
-    background: rgba(100, 200, 255, 0.3);
-    border: 1px solid rgba(100, 200, 255, 0.5);
+    background: rgba(100, 200, 255, 0.35);
+    border: 1px solid rgba(100, 200, 255, 0.6);
     box-shadow: 
         0 12px 40px rgba(100, 200, 255, 0.3),
         inset 0 1px 1px rgba(255, 255, 255, 0.3);
@@ -251,8 +250,7 @@ h1:hover {
         gap: 8px;
     }
 
-    .music-button,
-    .fullscreen-button {
+    .music-button {
         padding: 12px 18px;
         font-size: 12px;
     }
@@ -285,7 +283,6 @@ h1:hover {
 
 <div class="controls">
     <button class="music-button" id="musicBtn">🎵 Включить музыку</button>
-    <button class="fullscreen-button" id="fullscreenBtn">⛶ Полный экран</button>
 </div>
 
 <audio id="bgMusic" loop>
@@ -297,7 +294,6 @@ const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
 const music = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
-const fullscreenBtn = document.getElementById("fullscreenBtn");
 const fullscreenContainer = document.getElementById("fullscreenContainer");
 const fullscreenImage = document.getElementById("fullscreenImage");
 const closeFullscreenBtn = document.getElementById("closeFullscreen");
@@ -392,17 +388,6 @@ musicBtn.addEventListener("click", () => {
 
 // Фуллскрин по клику на заголовок
 document.querySelector("h1").addEventListener("click", () => {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-    } else {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.log("Ошибка фуллскрина:", err);
-        });
-    }
-});
-
-// Фуллскрин для галереи
-fullscreenBtn.addEventListener("click", () => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     } else {
