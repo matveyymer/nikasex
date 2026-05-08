@@ -40,13 +40,18 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    overflow: hidden;
 }
 
 h1 {
-    font-size: 120px;
+    font-size: clamp(40px, 10vw, 120px);
     font-weight: bold;
     opacity: 0;
     transform: scale(0.8);
+    text-align: center;
+    word-break: break-word;
+    max-width: 100%;
 
     background: linear-gradient(
         45deg,
@@ -59,6 +64,7 @@ h1 {
     background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 
     animation:
         gradientMove 6s ease infinite,
@@ -136,6 +142,18 @@ h1 {
     background: #000000;
     color: #ffffff;
 }
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    h1 {
+        font-size: clamp(32px, 12vw, 80px);
+    }
+    
+    .hero {
+        height: 50dvh;
+        padding: 10px;
+    }
+}
 </style>
 </head>
 <body>
@@ -185,7 +203,10 @@ let stars = [];
 let mouseX = 0;
 let mouseY = 0;
 
-for (let i = 0; i < 300; i++) {
+// Адаптивное количество звёзд
+const starCount = window.innerWidth < 768 ? 150 : 300;
+
+for (let i = 0; i < starCount; i++) {
     stars.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
